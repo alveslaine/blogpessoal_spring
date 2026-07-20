@@ -1,6 +1,18 @@
 package com.generation.blogpessoal.model;
 
-import jakarta.persistence.*;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -21,8 +33,20 @@ public class Tema {
     @Size(min = 5, max = 100, message = "A descrição deve ter entre 5 e 100 caracteres.")
     @Column(length = 100)
     private String descricao;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "tema", cascade = CascadeType.REMOVE)
+	@JsonIgnoreProperties(value = "tema", allowSetters = true)
+    private List<Postagem> postagem;
 
-    public Long getId() {
+    public List<Postagem> getPostagem() {
+		return postagem;
+	}
+
+	public void setPostagem(List<Postagem> postagem) {
+		this.postagem = postagem;
+	}
+
+	public Long getId() {
         return id;
     }
 
