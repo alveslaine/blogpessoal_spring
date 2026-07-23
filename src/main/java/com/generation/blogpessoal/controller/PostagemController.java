@@ -71,10 +71,13 @@ public class PostagemController {
 	
 	@PutMapping
 	public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem){
-		if(postagemRepository.existsById(postagem.getId()))
-		return ResponseEntity.ok(postagemRepository.save(postagem));
-		
-		//UPDATE tb_postagens SET titulo = ?, texto = ? WHERE id = ?);
+		if(postagemRepository.existsById(postagem.getId())) {
+			if (temaRepository.existsById(postagem.getTema().getId())) {
+				return ResponseEntity.ok(postagemRepository.save(postagem));
+				//UPDATE tb_postagens SET titulo = ?, texto = ? WHERE id = ?);
+			}
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O tema não existe!", null);
+		}
 		return ResponseEntity.notFound().build();
 	}
 	
